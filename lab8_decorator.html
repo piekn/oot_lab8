@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Coffee Shop</title>
+	<script src="coffee.js"></script>
+</head>
+<body>
+	<h1>Coffee Shop</h1>
+	<p>Choose your coffee and add some extras!</p>
+
+	<div>
+		<label for="coffee">Choose your coffee:</label>
+		<select id="coffee">
+			<option value="1">Coffee ($1)</option>
+			<option value="2">Latte ($2)</option>
+			<option value="3">Espresso ($3)</option>
+		</select>
+	</div>
+
+	<div>
+		<h2>Extras:</h2>
+		<input type="checkbox" id="milk" name="milk" value="0.5">
+		<label for="milk">Milk ($0.5)</label><br>
+		<input type="checkbox" id="whip" name="whip" value="0.7">
+		<label for="whip">Whip ($0.7)</label><br>
+		<input type="checkbox" id="sprinkles" name="sprinkles" value="0.2">
+		<label for="sprinkles">Sprinkles ($0.2)</label>
+	</div>
+
+	<button id="orderButton">Order Now!</button>
+
+	<p id="price"></p>
+
+	<script>
+		// Define the Coffee, Milk, Whip, and Sprinkles classes here
+		// ConcreteComponent (class to be decorated)
+		class Coffee {
+			constructor(cost) {
+				this.costValue = cost;
+			}
+			cost() {
+				return this.costValue;
+			}
+		}
+
+		// Decorator A
+		class Milk {
+			constructor(coffee) {
+				this.coffee = coffee;
+			}
+			cost() {
+				return this.coffee.cost() + 0.5;
+			}
+		}
+
+		// Decorator B
+		class Whip {
+			constructor(coffee) {
+				this.coffee = coffee;
+			}
+			cost() {
+				return this.coffee.cost() + 0.7;
+			}
+		}
+
+		// Decorator C
+		class Sprinkles {
+			constructor(coffee) {
+				this.coffee = coffee;
+			}
+			cost() {
+				return this.coffee.cost() + 0.2;
+			}
+		}
+
+		// Get references to the HTML elements
+		const coffeeSelect = document.getElementById('coffee');
+		const milkCheckbox = document.getElementById('milk');
+		const whipCheckbox = document.getElementById('whip');
+		const sprinklesCheckbox = document.getElementById('sprinkles');
+		const priceParagraph = document.getElementById('price');
+		const orderButton = document.getElementById('orderButton');
+
+		// Set up event listener for the order button
+		orderButton.addEventListener('click', function() {
+			// Create a new Coffee object with the selected cost
+			const selectedCoffee = coffeeSelect.value;
+			let coffeeCost = 1;
+			if (selectedCoffee === "2") {
+				coffeeCost = 2;
+			} else if (selectedCoffee === "3") {
+				coffeeCost = 3;
+			}
+			let coffee = new Coffee(coffeeCost);
+		
+		  // Wrap the Coffee object in any selected decorators
+		  	if (milkCheckbox.checked) {
+			  coffee = new Milk(coffee);
+			}
+			
+			if (whipCheckbox.checked) {
+			  coffee = new Whip(coffee);
+			}
+			
+			if (sprinklesCheckbox.checked) {
+			  coffee = new Sprinkles(coffee);
+			}
+		
+		  // Display the final price to the user
+		  const finalPrice = coffee.cost();
+		  priceParagraph.textContent = `Your total is $${finalPrice.toFixed(2)}`;
+		});
+	</script>
+</body>
+</html>

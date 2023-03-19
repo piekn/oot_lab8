@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adapter Pattern Example</title>
+  </head>
+  <body>
+    <h1>User Information</h1>
+    <p>
+      <label for="name-input">Name:</label>
+      <input type="text" id="name-input">
+    </p>
+    <p>
+      <label for="age-input">Age:</label>
+      <input type="number" id="age-input">
+    </p>
+    <p>
+      <label for="gender-input">Gender:</label>
+      <select id="gender-input">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </p>
+    <button id="submit-btn">Submit</button>
+
+    <h2>Adapted Information</h2>
+    <p>Full Name: <span id="full-name"></span></p>
+    <p>Age: <span id="age"></span></p>
+    <p>Gender: <span id="gender"></span></p>
+
+    <script>
+      // Define the format of the API's data
+      const apiData = {
+        "name": "",
+        "age": 0,
+        "gender": ""
+      };
+
+      // Define the format of the data you want to use in your web page
+      const adaptedData = {
+        "fullName": "",
+        "age": 0,
+        "isMale": false
+      };
+
+      // Create an Adapter class that converts the API's data format to the format you want to use in your web page
+      class DataAdapter {
+        constructor(apiData) {
+          this.fullName = apiData.name;
+          this.age = apiData.age;
+          this.isMale = (apiData.gender === 'male');
+        }
+      }
+
+      // Handle form submission
+      document.getElementById('submit-btn').addEventListener('click', () => {
+        // Get user input from the form
+        apiData.name = document.getElementById('name-input').value;
+        apiData.age = parseInt(document.getElementById('age-input').value);
+        apiData.gender = document.getElementById('gender-input').value;
+
+        // Create an adapter object to convert the API's data format to the format we want to use
+        const adaptedData = new DataAdapter(apiData);
+
+        // Display the adapted data in our web page
+        const fullNameElem = document.getElementById('full-name');
+        fullNameElem.innerText = adaptedData.fullName;
+
+        const ageElem = document.getElementById('age');
+        ageElem.innerText = adaptedData.age;
+
+        const genderElem = document.getElementById('gender');
+        genderElem.innerText = (adaptedData.isMale) ? 'Male' : 'Female';
+      });
+    </script>
+  </body>
+</html>
+
